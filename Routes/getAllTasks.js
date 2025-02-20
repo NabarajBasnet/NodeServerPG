@@ -1,14 +1,8 @@
 const express = require('express');
-const ConnectDB = require('../Config/ConnectDB');
+const { getAllTasks } = require('../Controllers/getTasksController');
 
 const router = express.Router();
 
-router.route('/').get(async (req, res) => {
-    console.log(`Hello world!`);
-    await ConnectDB();
-    res.writeHead(200, { 'Content-Type': 'text/html' });
-    res.write('Hello World!');
-    res.end();
-});
+router.route('/').get(getAllTasks);
 
 module.exports = router;
