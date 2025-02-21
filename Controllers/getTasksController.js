@@ -2,8 +2,8 @@ const pool = require("../Config/ConnectDB");
 
 const getAllTasks = async (req, res) => {
     try {
-        const getTasksQuery = await pool.query('SELECT * FROM users');
-        const results = getTasksQuery.rows;
+        const fetchTasksQuery = await pool.query('SELECT * FROM tasks');
+        const results = fetchTasksQuery.rows;
         res.status(200).json({
             results
         });
@@ -16,4 +16,45 @@ const getAllTasks = async (req, res) => {
     };
 };
 
-module.exports = { getAllTasks };
+const getSingleTask = async (req, res) => {
+    try {
+        const { id } = req.params;
+        console.log('ID: ', id);
+    } catch (err) {
+        console.log('Error: ', err);
+    };
+};
+
+const createNewTask = async (req, res) => {
+    try {
+
+    } catch (err) {
+        console.log('Error: ', err);
+    };
+};
+
+const updateTask = async (req, res) => {
+    try {
+
+    } catch (err) {
+        console.log('Error: ', err);
+    };
+};
+
+const patchTaskStatus = async (req, res) => {
+    try {
+
+    } catch (err) {
+        console.log('Error: ', err);
+    };
+};
+
+const deleteTask = async (req, res) => {
+    try {
+
+    } catch (err) {
+        console.log('Error: ', err);
+    };
+};
+
+module.exports = { getAllTasks, getSingleTask, createNewTask, updateTask, patchTaskStatus, deleteTask };

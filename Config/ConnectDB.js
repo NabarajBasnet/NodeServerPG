@@ -1,8 +1,14 @@
 const { Pool } = require('pg');
 
 const pool = new Pool({
-    connectionString: process.env.CONNECTION_STRING
+    user: "postgres",
+    password: "nabaraj",
+    host: "db.quffvzojwewwquzkobvj.supabase.co",
+    port: 5432,
+    database: "postgres",
+    ssl: { rejectUnauthorized: false }
 });
+
 
 pool.connect()
     .then(() => console.log('Database connected!'))
