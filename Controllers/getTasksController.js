@@ -3,7 +3,7 @@ const pool = require("../Config/ConnectDB");
 const getAllTasks = async (req, res) => {
     try {
         const getTasksQuery = await pool.query('SELECT * FROM users');
-        const results = getTasksQuery.rows
+        const results = getTasksQuery.rows;
         res.status(200).json({
             results
         });
