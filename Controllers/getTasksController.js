@@ -56,25 +56,77 @@ const createNewTask = async (req, res) => {
 
 const updateTask = async (req, res) => {
     try {
+        const { id } = req.params;
+        const { task_title, task_description, task_status } = req.body;
 
+        const updateTaskQuery = await pool.query(
+            `UPDATE Tasks 
+             SET task_title = $2, 
+                 task_description = $3, 
+                 task_status = $4 
+             WHERE task_id = $1 
+             RETURNING *`,
+            [id, task_title, task_description, task_status]
+        );
+
+        if (updateTaskQuery.rowCount === 0) {
+            return res.status(404).json({ message: 'Task not found!' });
+        }
+
+        res.status(200).json({
+            message: 'Task updated successfully!',
+            result: updateTaskQuery.rows[0]
+        });
     } catch (err) {
-        console.log('Error: ', err);
-    };
+        console.error('Error:', err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 };
 
 const patchTaskStatus = async (req, res) => {
     try {
+        const { id } = req.params;
+        const { task_status } = req.body;
+        console.log(task_status);
 
+        const patchTaskStatusQuery = await pool.query(`
+        UPDATE Tasks
+        SET task_status = $2
+        WHERE task_id = $1
+        RETURNING *
+        `,
+            [id, task_status]);
+
+        res.status(200).json({
+            message: 'Task status updated successfully!',
+            result: patchTaskStatusQuery.rows[0]
+        });
     } catch (err) {
         console.log('Error: ', err);
+        res.status(500).json({ error: 'Internal Server Error' });
     };
 };
 
 const deleteTask = async (req, res) => {
     try {
+        const { id } = req.params;
+        const deleteTaskQuery = await pool.query(`
+            DELETE FROM Tasks
+            WHERE task_id = $1
+            RETURNING *`,
+            [id]);
 
+        if (deleteTaskQuery.rowCount === 0) {
+            return res.status(404).json({ message: 'Task not found!' });
+        };
+
+        res.status(200).json({
+            message: 'Task deleted!',
+            result: deleteTaskQuery.rows[0]
+        });
     } catch (err) {
         console.log('Error: ', err);
+        res.status(500).json({ error: 'Internal Server Error' });
     };
 };
 
