@@ -4,6 +4,9 @@ const dotenv = require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT;
 
+// Global middlewares
+app.use(express.json());
+
 // Create task table
 createTaskTable();
 
