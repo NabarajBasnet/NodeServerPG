@@ -3,12 +3,13 @@ const { Pool } = require('pg');
 const pool = new Pool({
     user: "postgres",
     password: "nabaraj",
-    host: "db.quffvzojwewwquzkobvj.supabase.co",
+    host: "localhost",
     port: 5432,
     database: "postgres",
-    ssl: { rejectUnauthorized: false }
 });
 
+// db.quffvzojwewwquzkobvj.supabase.co      // Supabase host
+// ssl: { rejectUnauthorized: false }
 
 pool.connect()
     .then(() => console.log('Database connected!'))

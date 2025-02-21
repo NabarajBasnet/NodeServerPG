@@ -8,11 +8,9 @@ const createTaskTable = async () => {
               task_title VARCHAR(255) NOT NULL,
               task_description VARCHAR(255),
               task_status BOOLEAN NOT NULL DEFAULT false
-          )`)
-            .then(() => console.log('Table created'))
-            .catch(err => console.log(err));
+          )`);
     } catch (err) {
         console.log(err);
     };
-}
+};
 module.exports = createTaskTable;
