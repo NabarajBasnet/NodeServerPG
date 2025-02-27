@@ -7,9 +7,6 @@ const PORT = process.env.PORT;
 // Global middlewares
 app.use(express.json());
 
-// Create task table
-createTaskTable();
-
 app.use('/api/tasks', require('./Routes/getAllTasks'));
 
 // Start server
