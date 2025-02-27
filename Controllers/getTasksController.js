@@ -30,7 +30,14 @@ const getSingleTask = async (req, res) => {
         fs.readFile('./db.json', 'utf8', (err, data) => {
             const tasks = JSON.parse(data);
             const singleTask = tasks.find(task => task.task_id === id);
-            console.log(singleTask);
+            if (err) {
+                return res.status(500).json({
+                    err
+                });
+            };
+            return res.status(200).json({
+                singleTask,
+            });
         });
     } catch (err) {
         console.log('Error: ', err);
@@ -46,7 +53,6 @@ const createNewTask = async (req, res) => {
         const { task_title, task_description, task_status } = req.body;
         const newTaskObj = { task_id, task_title, task_description, task_status };
 
-        //Read the existing file data and ensure is array
         fs.readFile('./db.json', 'utf8', (err, data) => {
             let tasks = [];
             if (!err && data) {
@@ -78,11 +84,30 @@ const createNewTask = async (req, res) => {
 
 const updateTask = async (req, res) => {
     try {
+        const { id } = req.params
+        const { task_title, task_description, task_status } = req.body;
+        const newTaskObj = { task_id: id, task_title, task_description, task_status };
+        fs.readFile('./db.json', 'utf8', (err, data) => {
+            let tasks = JSON.parse(data);
 
+            let taskIndex = tasks.findIndex(task => task.task_id === id.toString());
+            console.log(taskIndex);
+            if (taskIndex === -1) {
+                return res.status(404).json({ error: 'Task not found!' });
+            };
+            tasks[taskIndex] = newTaskObj;
+            fs.writeFile('./db.json', JSON.stringify(tasks, null, 2), (err) => {
+                if (err) return res.status(500).json({ error: err })
+                return res.status(200).json({
+                    task: tasks[taskIndex],
+                    message: 'Task updated!'
+                });
+            });
+        });
     } catch (err) {
         console.error('Error:', err);
         res.status(500).json({ error: 'Internal Server Error' });
-    }
+    };
 };
 
 const patchTaskStatus = async (req, res) => {
