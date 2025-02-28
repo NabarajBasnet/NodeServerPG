@@ -145,6 +145,45 @@ const patchTaskStatus = async (req, res) => {
 
 const deleteTask = async (req, res) => {
     try {
+        const { id } = req.params;
+        // Get all task objects from array
+        fs.readFile('./db.json', 'utf8', (err, data) => {
+            if (err) {
+                return res.status(500).json({
+                    err,
+                    message: 'Internal server error!'
+                });
+            };
+
+            if (!err && data) {
+                let tasks = JSON.parse(data);
+
+                // Find to delete task
+                const toDeleteTask = tasks.find(task => task.task_id === id);
+                if (!toDeleteTask) {
+                    return res.status(500).json({
+                        message: 'Task not found!',
+                    });
+                }
+                // Find to delete task index
+                let updatedTasks = tasks.filter(task => task.task_id !== id.toString());
+                if (!updatedTasks) {
+                    return res.status(500).json({
+                        message: 'Error found!',
+                    });
+                };
+                fs.writeFile('./db.json', JSON.stringify(updatedTasks, null, 2), (err) => {
+                    if (err) return res.status(500).json({
+                        err,
+                        message: 'Internal server error!',
+                    });
+                    res.status(200).json({
+                        message: 'Task deleted',
+                        updatedTasks
+                    })
+                })
+            };
+        });
 
     } catch (err) {
         console.log('Error: ', err);
