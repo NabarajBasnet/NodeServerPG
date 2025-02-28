@@ -91,7 +91,6 @@ const updateTask = async (req, res) => {
             let tasks = JSON.parse(data);
 
             let taskIndex = tasks.findIndex(task => task.task_id === id.toString());
-            console.log(taskIndex);
             if (taskIndex === -1) {
                 return res.status(404).json({ error: 'Task not found!' });
             };
@@ -112,7 +111,32 @@ const updateTask = async (req, res) => {
 
 const patchTaskStatus = async (req, res) => {
     try {
+        const { id } = req.params
+        const { task_title, task_description, task_status } = req.body;
+        // Read all the task objects in array 
+        fs.readFile('./db.json', 'utf8', (err, data) => {
+            let tasks = JSON.parse(data);
 
+            // Find task with id
+            let taskIndex = tasks.findIndex(task => task.task_id === id.toString());
+            if (taskIndex === -1) {
+                return res.status(404).json({ error: 'Task not found!' });
+            };
+
+            // Change status of selected task
+            tasks[taskIndex].task_status = task_status;
+
+            // Write whole task array in file after changing status
+            fs.writeFile('./db.json', JSON.stringify(tasks, null, 2), (err) => {
+                if (err) return res.status(500).json({ error: err });
+                // Save and return 
+                return res.status(200).json({
+                    task: tasks[taskIndex],
+                    message: `Task status is updated to ${task_status}`
+                });
+            });
+            console.log(tasks);
+        });
     } catch (err) {
         console.log('Error: ', err);
         res.status(500).json({ error: 'Internal Server Error' });
